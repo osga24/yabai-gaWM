@@ -1,0 +1,72 @@
+#!/bin/sh
+export PATH="/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+# 從 AeroSpace 遷移；保持 SIP 開啟，未載入 scripting addition。
+# 預設用 BSP 二分割平鋪；不是 AeroSpace 的容器樹。
+yabai -m config layout bsp
+# 依區域長寬比自動選擇左右／上下分割。
+yabai -m config split_type auto
+# 新分割初始比例為一半。
+yabai -m config split_ratio 0.5
+# 視窗數量變動時平均面積，可能重設手動比例。
+yabai -m config auto_balance on
+# 鍵盤切換焦點時，游標跟隨視窗。
+yabai -m config mouse_follows_focus on
+# 滑鼠移過視窗時不自動搶焦點。
+yabai -m config focus_follows_mouse off
+# 新視窗預設放在分割的右側或下側。
+yabai -m config window_placement second_child
+# 按住 Option 配合滑鼠操作。
+yabai -m config mouse_modifier alt
+# Option＋左鍵拖曳：移動／重新排列。
+yabai -m config mouse_action1 move
+# Option＋右鍵拖曳：調整大小。
+yabai -m config mouse_action2 resize
+# 拖到鄰居中央時交換；邊緣則重新插入。
+yabai -m config mouse_drop_action swap
+# 嘗試跳過跨桌面聚焦動畫；數字切桌面另由 tools/SpaceSwitch.app 負責。
+yabai -m config skip_window_focus_animation on
+# 螢幕四邊留白各 6 點。
+yabai -m config top_padding 6
+yabai -m config bottom_padding 6
+yabai -m config left_padding 6
+yabai -m config right_padding 6
+# 平鋪視窗之間留 6 點。
+yabai -m config window_gap 6
+# App 例外：manage=off 保持浮動；manage=on 納入平鋪。
+# yabai -m rule --add 'app=^Calculator$' manage=off
+# yabai -m rule --add 'app=^Karabiner\-Elements$' manage=off
+# yabai -m rule --add 'app=^QuickTime\ Player$' manage=off
+# yabai -m rule --add label=aerospace-migrated-0 'app=^Finder$' manage=off
+yabai -m rule --add label=aerospace-migrated-1 'app=^System\ Settings$' manage=off
+# yabai -m rule --add label=aerospace-migrated-2 'app=^Claude$' manage=off
+# yabai -m rule --add label=aerospace-migrated-3 'app=^ChatGPT$' manage=off
+# 自動分桌已停用；下一行保留原規則，勿與啟用版重複開啟。
+# yabai -m rule --add label=aerospace-migrated-4 'app=^YT\ Music$' manage=off space=9
+# yabai -m rule --add label=aerospace-migrated-4 'app=^YT\ Music$' manage=off
+# yabai -m rule --add label=aerospace-migrated-5 'app=^Bitwarden$' manage=off
+# yabai -m rule --add label=aerospace-migrated-6 'app=^1Password$' manage=off
+# yabai -m rule --add label=aerospace-migrated-7 'app=^Microsoft\ Outlook$' manage=off
+# yabai -m rule --add label=aerospace-migrated-8 'app=^Type\ Here$' manage=off
+# yabai -m rule --add label=aerospace-migrated-9 'app=^Reminders$' manage=off
+# yabai -m rule --add label=aerospace-migrated-10 'app=^Shottr$' manage=off
+# 自動分桌已停用；下一行保留原規則，勿與啟用版重複開啟。
+# yabai -m rule --add label=aerospace-migrated-11 'app=^Zen$' space=1
+# 自動分桌已停用；下一行保留原規則，勿與啟用版重複開啟。
+# yabai -m rule --add label=aerospace-migrated-12 'app=^Discord$' space=5
+# 自動分桌已停用；下一行保留原規則，勿與啟用版重複開啟。
+# yabai -m rule --add label=aerospace-migrated-13 'app=^Telegram$' space=5
+# 自動分桌已停用；下一行保留原規則，勿與啟用版重複開啟。
+# yabai -m rule --add label=aerospace-migrated-14 'app=^Ghostty$' manage=on space=2
+#yabai -m rule --add label=aerospace-migrated-14 'app=^Ghostty$' manage=on
+# 自動分桌已停用；下一行保留原規則，勿與啟用版重複開啟。
+# yabai -m rule --add label=aerospace-migrated-15 'app=^Figma$' space=6
+# 自動分桌已停用；下一行保留原規則，勿與啟用版重複開啟。
+# yabai -m rule --add label=aerospace-migrated-16 'app=^Zed$' space=3
+# 桌面／螢幕改變時通知 SketchyBar 更新；只影響顯示，不負責切換。
+if command -v sketchybar >/dev/null 2>&1; then
+	for event in space_changed display_changed; do
+		yabai -m signal --remove "migration-$event" 2>/dev/null || true
+		yabai -m signal --add label="migration-$event" event="$event" action="/opt/homebrew/bin/sketchybar --trigger yabai_space_change"
+	done
+	sketchybar --trigger yabai_space_change
+fi

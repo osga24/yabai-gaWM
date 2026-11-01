@@ -1,0 +1,77 @@
+# 快捷鍵沿用 AeroSpace 習慣；目標原生桌面需先在 Mission Control 建立。
+
+# 特殊模式會攔截按鍵；Option Shift 分號進入，Escape 離開。
+:: service @
+alt + shift - 0x29 ; service
+
+# 視窗方向：H 左、J 下、K 上、L 右。Option 選焦點；加 Shift 交換；加 Control 重新插入。
+alt - h : yabai -m window --focus west
+alt + shift - h : yabai -m window --swap west
+alt + ctrl - h : yabai -m window --warp west
+alt - j : yabai -m window --focus south
+alt + shift - j : yabai -m window --swap south
+alt + ctrl - j : yabai -m window --warp south
+alt - k : yabai -m window --focus north
+alt + shift - k : yabai -m window --swap north
+alt + ctrl - k : yabai -m window --warp north
+alt - l : yabai -m window --focus east
+alt + shift - l : yabai -m window --swap east
+alt + ctrl - l : yabai -m window --warp east
+
+# 螢幕方向：S 左、F 右、I 上、U 下；加 Shift 移窗並跟隨。依系統顯示器排列判斷。
+alt - s : yabai -m display --focus west
+alt + shift - s : "$HOME/.config/yabai/tools/wm-compat" display west
+alt - f : yabai -m display --focus east
+alt + shift - f : "$HOME/.config/yabai/tools/wm-compat" display east
+alt - i : yabai -m display --focus north
+alt + shift - i : "$HOME/.config/yabai/tools/wm-compat" display north
+alt - u : yabai -m display --focus south
+alt + shift - u : "$HOME/.config/yabai/tools/wm-compat" display south
+
+# 桌面 1–9 使用全域編號。Option 切桌面；Option Shift 送目前視窗。
+# 切換依賴：skhd → 原生 SpaceSwitch → yabai 查編號 + 內建 macOS 27 切換事件。
+# SpaceSwitch.app 路徑需保留；需輔助使用權限，無需常駐。
+alt - 1 : "$HOME/.config/yabai/tools/SpaceSwitch.app/Contents/MacOS/space-switch" 1
+alt + shift - 1 : yabai -m window --space 1
+alt - 2 : "$HOME/.config/yabai/tools/SpaceSwitch.app/Contents/MacOS/space-switch" 2
+alt + shift - 2 : yabai -m window --space 2
+alt - 3 : "$HOME/.config/yabai/tools/SpaceSwitch.app/Contents/MacOS/space-switch" 3
+alt + shift - 3 : yabai -m window --space 3
+alt - 4 : "$HOME/.config/yabai/tools/SpaceSwitch.app/Contents/MacOS/space-switch" 4
+alt + shift - 4 : yabai -m window --space 4
+alt - 5 : "$HOME/.config/yabai/tools/SpaceSwitch.app/Contents/MacOS/space-switch" 5
+alt + shift - 5 : yabai -m window --space 5
+alt - 6 : "$HOME/.config/yabai/tools/SpaceSwitch.app/Contents/MacOS/space-switch" 6
+alt + shift - 6 : yabai -m window --space 6
+alt - 7 : "$HOME/.config/yabai/tools/SpaceSwitch.app/Contents/MacOS/space-switch" 7
+alt + shift - 7 : yabai -m window --space 7
+alt - 8 : "$HOME/.config/yabai/tools/SpaceSwitch.app/Contents/MacOS/space-switch" 8
+alt + shift - 8 : yabai -m window --space 8
+alt - 9 : "$HOME/.config/yabai/tools/SpaceSwitch.app/Contents/MacOS/space-switch" 9
+alt + shift - 9 : yabai -m window --space 9
+
+# 排列：R 切分割方向、E 浮動、M 桌面內放大、B 均分、C BSP／Stack。
+alt + shift - r : yabai -m window --toggle split
+alt + shift - e : "$HOME/.config/yabai/tools/wm-compat" float
+alt + shift - m : yabai -m window --toggle zoom-fullscreen
+alt + shift - b : yabai -m space --balance
+alt + shift - c : "$HOME/.config/yabai/tools/wm-compat" layout
+
+# 大小：Option Shift -／=，每次約 50 點；浮動視窗同時調整寬高。
+# 0x1B 是減號，0x18 是等號／加號所在鍵。Stack 不支援分別調整佔比。
+alt + shift - 0x1B : "$HOME/.config/yabai/tools/wm-compat" resize -50
+alt + shift - 0x18 : "$HOME/.config/yabai/tools/wm-compat" resize 50
+
+# Service mode：F 浮動、R 均分；操作後要按 Escape 回一般模式。
+service < escape ; default
+service < f : "$HOME/.config/yabai/tools/wm-compat" float
+service < r : yabai -m space --balance
+# 未綁定關閉其餘視窗；方向焦點尚未針對 Stack 改成上一個／下一個。
+
+# 堆疊視窗循環切換：Shift N 下一個，Shift P 上一個。
+alt + shift - n : yabai -m window --focus stack.next || yabai -m window --focus stack.first
+alt + shift - p : yabai -m window --focus stack.prev || yabai -m window --focus stack.last
+
+# 同螢幕的上一個／下一個桌面，沿用 SpaceSwitch 無動畫；邊界不循環。
+alt - p : "$HOME/.config/yabai/tools/space-step.sh" prev
+alt - n : "$HOME/.config/yabai/tools/space-step.sh" next

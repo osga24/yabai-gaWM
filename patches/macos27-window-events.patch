@@ -1,0 +1,14 @@
+diff --git a/src/workspace.m b/src/workspace.m
+index ace68c9..08e8794 100644
+--- a/src/workspace.m
++++ b/src/workspace.m
+@@ -1,6 +1,9 @@
+ bool workspace_event_handler_begin(void **context)
+ {
+     NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
++    // macOS 27 keeps the modern window lifecycle notifications used by Tahoe.
++    // Keep this compatibility fallback scoped to the OS verified on this Mac.
++    if (version.majorVersion == 27) version.majorVersion = 26;
+ #define SUPPORT_MACOS_VERSION(name, major_version) _workspace_is_macos_version_##name = version.majorVersion == major_version;
+     SUPPORTED_MACOS_VERSION_LIST
+ #undef SUPPORT_MACOS_VERSION
